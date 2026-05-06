@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  旅行伴侣 - Android 应用图标（Vector Drawable）
+  由 icon.svg 转换而来
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    
+    <!-- 圆角背景 -->
+    <path
+        android:fillColor="#2D9B6E"
+        android:pathData="M96,0L416,0A96,96 0,0 1,512 96L512,416A96,96 0,0 1,416 512L96,512A96,96 0,0 1,0 416L0,96A96,96 0,0 1,96 0Z"/>
+    
+    <!-- 渐变覆盖 -->
+    <path
+        android:fillColor="#43B97F"
+        android:alpha="0.3"
+        android:pathData="M0,0L512,0L512,512L0,512Z"/>
+    
+    <!-- 飞机主体 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.95"
+        android:pathData="M256,130L296,240L436,280L416,310L256,260L96,310L76,280L216,240Z"/>
+    
+    <!-- 飞机中心装饰线 -->
+    <path
+        android:strokeColor="#2D9B6E"
+        android:strokeWidth="4"
+        android:strokeAlpha="0.3"
+        android:fillColor="#00000000"
+        android:pathData="M256,130L256,260"/>
+    
+    <!-- 文字 "旅行" -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.9"
+        android:pathData="M180,380
+            M256,360
+            L332,380"/>
+    <!-- 由于中文字体无法在 Vector Drawable 中直接渲染，
+         这里用简化的几何图形替代文字，实际建议使用文字生成工具 -->
+</vector>

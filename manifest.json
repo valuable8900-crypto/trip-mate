@@ -1,0 +1,67 @@
+{
+  "name": "旅行伴侣",
+  "short_name": "旅行伴侣",
+  "description": "智能旅行规划助手 - 创建行程、管理预算、记录活动",
+  "start_url": "index.html",
+  "display": "standalone",
+  "display_override": ["standalone", "window-controls-overlay"],
+  "orientation": "portrait",
+  "scope": "./",
+  "theme_color": "#2D9B6E",
+  "background_color": "#F5F7FA",
+  "categories": ["travel", "lifestyle", "productivity"],
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icons/screenshot-home.png",
+      "sizes": "360x640",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "旅行伴侣首页"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "创建新行程",
+      "short_name": "新行程",
+      "description": "快速创建新旅行行程",
+      "url": "index.html?action=new-trip",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "预算管理",
+      "short_name": "预算",
+      "description": "查看和管理行程预算",
+      "url": "index.html?action=budget",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

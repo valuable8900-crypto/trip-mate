@@ -1,0 +1,26 @@
+{
+  "name": "trip-mate",
+  "version": "1.0.0",
+  "description": "旅行伴侣 - 智能旅行规划助手",
+  "private": true,
+  "scripts": {
+    "start": "npx serve . -p 3000",
+    "build": "echo '纯静态项目，无需构建'",
+    "build:site": "echo '纯静态项目，无需构建'",
+    "cap:init": "npx cap init 旅行伴侣 com.tripmate.app --webDir=.",
+    "cap:add:android": "npx cap add android",
+    "cap:sync": "npx cap copy android",
+    "cap:build": "cd android && ./gradlew assembleDebug"
+  },
+  "webApkShell": {
+    "build_script": "echo '纯静态项目，无需构建'",
+    "dist_path": ".",
+    "AP_ID": "com.tripmate.app",
+    "AP_NAME": "旅行伴侣",
+    "AP_VERSION_NAME": "1.0.0",
+    "AP_ICON": "./app-icon.xml"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}

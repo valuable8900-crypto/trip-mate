@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#2D9B6E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="旅行伴侣">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="旅行伴侣">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+<title>旅行伴侣 - 智能旅行规划</title>
+<link rel="stylesheet" href="css/style.css">
+<!-- iOS 启动屏幕（运行时生成） -->
+<script>
+  (function(){
+    // 根据设备生成合适的启动屏图标
+    const sizes = [152, 167, 180, 192, 512];
+    const head = document.head;
+    sizes.forEach(s => {
+      const link = document.createElement('link');
+      link.rel = 'apple-touch-icon';
+      link.sizes = s + 'x' + s;
+      link.href = 'icons/icon-' + s + '.png';
+      head.appendChild(link);
+    });
+  })();
+</script>
+</head>
+<body>
+
+<header class="top-nav" id="topNav">
+  <div class="top-nav-inner">
+    <div class="logo"><span class="logo-icon">✈</span><span class="logo-text">旅行伴侣</span></div>
+    <button class="theme-toggle" id="themeToggle"><span class="icon-sun">☀</span><span class="icon-moon">☽</span></button>
+  </div>
+</header>
+
+<main class="page-container" id="pageContainer">
+
+<!-- ===== 行程管理（默认首页） ===== -->
+<section class="page active" id="page-home">
+  <div class="page-content">
+    <div class="quick-create">
+      <div class="quick-create-bg"></div>
+      <div class="quick-create-content">
+        <h2>下一站去哪？</h2>
+        <p>开启你的专属旅行规划</p>
+        <button class="btn btn-primary btn-lg" onclick="createNewTrip()"><span>✎</span> 创建新行程</button>
+      </div>
+    </div>
+    <div class="section">
+      <h3>快捷功能</h3>
+      <div class="feature-grid">
+        <div class="feature-card" onclick="nav('trip-editor')"><div class="feature-icon" style="background:#E8F5E9"><span>📋</span></div><span class="feature-label">创建行程</span></div>
+        <div class="feature-card" onclick="nav('budget')"><div class="feature-icon" style="background:#FFF3E0"><span>💰</span></div><span class="feature-label">预算管理</span></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header"><h3>我的行程</h3></div>
+      <div id="homeTripList"></div>
+    </div>
+    <div class="bottom-spacer"></div>
+  </div>
+</section>
+
+<!-- ===== 行程编辑页 ===== -->
+<section class="page" id="page-trip-editor">
+  <div class="page-header"><button class="btn-back" onclick="nav('home')">‹</button><h2 id="editorTitle">新行程</h2><span></span></div>
+  <div class="page-content">
+    <div class="trip-editor-banner" id="editorBanner">
+      <span class="editor-banner-icon">✈</span>
+      <span class="editor-banner-text" id="editorBannerText">创建新行程</span>
+    </div>
+    <div class="form-group"><label>目的地 <span class="required">*</span></label><input type="text" id="tripDestination" placeholder="输入目的地名称"></div>
+    <div class="form-row">
+      <div class="form-group half">
+        <label>出发日期 <span class="required">*</span></label>
+        <div class="cn-date-picker" id="startPicker"></div>
+      </div>
+      <div class="form-group half">
+        <label>结束日期 <span class="required">*</span></label>
+        <div class="cn-date-picker" id="endPicker"></div>
+      </div>
+    </div>
+    <div class="form-group"><label>每日行程</label><div id="daysVerticalContainer"></div></div>
+    <div class="trip-preview" id="tripPreview" style="display:none"><h4>行程预览</h4><div id="tripPreviewContent"></div></div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="saveAndGoHome()">💾 保存</button>
+      <button class="btn btn-secondary" onclick="shareTrip()">📤 分享</button>
+    </div>
+    <div class="bottom-spacer"></div>
+  </div>
+</section>
+
+<!-- ===== 活动详情页 ===== -->
+<section class="page" id="page-activity-detail">
+  <div class="page-header"><button class="btn-back" id="actBackBtn">‹</button><h2 id="actDetailTitle">活动详情</h2><span></span></div>
+  <div class="act-detail-hero" id="actDetailHero">
+    <div class="act-detail-hero-overlay"></div>
+    <div class="act-detail-hero-text">
+      <span class="act-detail-type" id="actDetailType"></span>
+      <h2 id="actDetailName"></h2>
+      <p id="actDetailMeta"></p>
+    </div>
+  </div>
+  <div class="page-content">
+    <div class="act-detail-section"><h3>活动信息</h3>
+      <div class="act-detail-info-grid">
+        <div class="act-info-item"><span class="act-info-icon">🕐</span><div><label>开始时间</label><span id="actDetailTime"></span></div></div>
+        <div class="act-info-item"><span class="act-info-icon">📍</span><div><label>活动地点</label><span id="actDetailLoc"></span></div></div>
+        <div class="act-info-item"><span class="act-info-icon">💰</span><div><label>预计支出</label><span id="actDetailCost"></span></div></div>
+        <div class="act-info-item"><span class="act-info-icon">📋</span><div><label>活动类型</label><span id="actDetailTypeLabel"></span></div></div>
+      </div>
+    </div>
+    <div class="act-detail-section"><h3>活动图片</h3><div class="act-detail-images" id="actDetailImages"></div></div>
+    <div class="bottom-spacer"></div>
+  </div>
+</section>
+
+<!-- ===== 预算页 ===== -->
+<section class="page" id="page-budget">
+  <div class="page-header"><button class="btn-back" onclick="nav('home')">‹</button><h2>预算管理</h2><span></span></div>
+  <div class="page-content">
+    <div class="form-group"><label>选择行程查看预算</label><div id="budgetTripCards"></div></div>
+    <div class="budget-pie-section"><h3>预算构成</h3>
+      <div class="pie-chart-container"><canvas id="budgetPieChart" width="260" height="260"></canvas><div class="pie-center-label" id="pieCenterLabel">总预算<br><span id="pieTotal">¥0</span></div></div>
+      <div class="pie-legend" id="pieLegend"></div>
+    </div>
+    <div class="section"><h3>支出明细</h3><div id="budgetCategoryDetail"></div></div>
+    <div class="section"><h3>每日预算分布</h3><div id="budgetDayDetail"></div></div>
+    <div class="bottom-spacer"></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== 底部导航（2项） ===== -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="nav-item active" data-page="home" onclick="nav('home')"><span class="nav-icon">📋</span><span class="nav-label">行程</span></button>
+  <button class="nav-item" data-page="budget" onclick="nav('budget')"><span class="nav-icon">💰</span><span class="nav-label">预算</span></button>
+</nav>
+
+<!-- ===== 活动弹窗 ===== -->
+<div class="modal-overlay" id="activityModal" style="display:none" onclick="closeModal(event,'activityModal')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-header"><h3 id="activityModalTitle">添加活动</h3><button class="modal-close" onclick="closeModalDirect('activityModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>活动类型</label>
+        <div class="type-selector">
+          <button class="type-btn active" data-type="attraction" onclick="selType(this)">🏔 景点</button>
+          <button class="type-btn" data-type="food" onclick="selType(this)">🍜 餐饮</button>
+          <button class="type-btn" data-type="hotel" onclick="selType(this)">🏨 住宿</button>
+          <button class="type-btn" data-type="transport" onclick="selType(this)">🚗 交通</button>
+          <button class="type-btn" data-type="other" onclick="selType(this)">📦 其他</button>
+        </div>
+      </div>
+      <div class="form-group"><label>活动名称 <span class="required">*</span></label><input type="text" id="activityName" placeholder="如：故宫博物院"></div>
+      <div class="form-row">
+        <div class="form-group half">
+          <label>开始时间 <span class="required">*</span></label>
+          <input type="time" id="activityStartTime" class="time-input" step="60">
+        </div>
+        <div class="form-group half">
+          <label>活动地点 <span class="required">*</span></label>
+          <input type="text" id="activityLocation" placeholder="如：北京市东城区">
+        </div>
+      </div>
+      <div class="form-group"><label>上传图片（最多5张）</label>
+        <div class="multi-image-upload">
+          <input type="file" accept="image/*" id="activityImageInput" onchange="previewActivityImages(event)" multiple style="display:none">
+          <div class="upload-placeholder" onclick="document.getElementById('activityImageInput').click()"><span class="upload-icon">📷</span><span>点击选择图片</span></div>
+          <div class="multi-image-previews" id="activityImagePreviews"></div>
+        </div>
+      </div>
+      <div class="form-group"><label>预计支出 (元)</label><input type="number" id="activityCost" placeholder="0" min="0"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModalDirect('activityModal')">取消</button><button class="btn btn-primary" onclick="confirmAddActivity()">确认</button></div>
+  </div>
+</div>
+
+<!-- ===== 全屏图片 ===== -->
+<div class="fullscreen-overlay" id="fullscreenViewer" style="display:none" onclick="closeFullscreenViewer()">
+  <button class="fullscreen-close" onclick="closeFullscreenViewer()">✕</button>
+  <img id="fullscreenImage" src="" alt="全屏查看">
+</div>
+
+<!-- ===== 分享弹窗 ===== -->
+<div class="modal-overlay" id="shareModal" style="display:none" onclick="closeModal(event,'shareModal')">
+  <div class="modal-content modal-share" onclick="event.stopPropagation()">
+    <div class="modal-header"><h3>分享行程</h3><button class="modal-close" onclick="closeModalDirect('shareModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="share-card" id="shareCard">
+        <div class="share-card-header"><span class="share-logo">✈ 旅行伴侣</span></div>
+        <div class="share-card-body" id="shareCardBody"><h3 id="shareTripName">我的旅行</h3><div class="share-info" id="shareInfo"></div><div class="share-summary" id="shareSummary"></div></div>
+        <div class="share-card-footer"><span>用旅行伴侣，规划每一段精彩旅程</span></div>
+      </div>
+      <div class="share-actions"><button class="btn btn-primary" onclick="downloadShareCard()">💾 下载分享图片</button><button class="btn btn-outline" onclick="copyShareLink()">📋 复制分享链接</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="js/app.js"></script>
+<script>
+// ===== PWA - Service Worker 注册 =====
+(function() {
+  if ('serviceWorker' in navigator) {
+    // 延迟注册，不影响首屏加载
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('sw.js').then(function(reg) {
+        console.log('[PWA] Service Worker 注册成功，作用域:', reg.scope);
+        
+        // 检查是否有等待中的新版本
+        if (reg.waiting) {
+          console.log('[PWA] 有新版本等待激活');
+        }
+        
+        // 监听到新版本
+        reg.addEventListener('updatefound', function() {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', function() {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // 新版本已安装，提醒用户刷新
+              if (confirm('旅行伴侣有新版本可用！点击确定刷新页面以应用更新。')) {
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+                window.location.reload();
+              }
+            }
+          });
+        });
+      }).catch(function(err) {
+        console.warn('[PWA] Service Worker 注册失败:', err.message);
+      });
+
+      // 监听 controller 变化（新 SW 激活后刷新）
+      navigator.serviceWorker.addEventListener('controllerchange', function() {
+        window.location.reload();
+      });
+    });
+
+    // 离线检测提示
+    window.addEventListener('offline', function() {
+      if (typeof showToast === 'function') {
+        showToast('⚠ 网络已断开，部分功能可能受限', 'warning');
+      }
+    });
+    window.addEventListener('online', function() {
+      if (typeof showToast === 'function') {
+        showToast('✓ 网络已恢复', 'success');
+      }
+    });
+  } else {
+    console.log('[PWA] 当前浏览器不支持 Service Worker');
+  }
+
+  // URL 参数快捷导航（支持从主屏快捷方式跳转）
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('action');
+    if (action === 'new-trip' && typeof nav === 'function') {
+      setTimeout(function() { nav('trip-editor'); }, 300);
+    } else if (action === 'budget' && typeof nav === 'function') {
+      setTimeout(function() { nav('budget'); }, 300);
+    }
+  })();
+})();
+</script>
+</body>
+</html>
