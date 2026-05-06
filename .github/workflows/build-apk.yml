@@ -33,7 +33,7 @@ jobs:
           
       - name: Init Android project
         run: |
-          npx cap init "旅行伴侣" "com.tripmate.app" --webDir=. --no-telemetry
+          npx cap init "旅行伴侣" "com.tripmate.app" --web-Dir=. --no-telemetry
           npx cap add android --no-telemetry
           
       - name: Build APK
