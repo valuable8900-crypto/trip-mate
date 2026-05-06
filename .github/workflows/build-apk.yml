@@ -6,8 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-android-apk:
-    name: Build Android APK
+  build:
     runs-on: ubuntu-latest
     
     steps:
@@ -15,7 +14,7 @@ jobs:
       
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
           
       - uses: actions/setup-java@v4
         with:
@@ -26,23 +25,24 @@ jobs:
         
       - name: Install Capacitor
         run: |
-          npm init -y
-          npm install @capacitor/core@latest
-          npm install @capacitor/cli@latest
-          npm install @capacitor/android@latest
+          npm install -g @capacitor/core@latest
+          npm install -g @capacitor/cli@latest
           
-      - name: Init Android project
+      - name: Add Android platform
         run: |
-          npx cap init "旅行伴侣" "com.tripmate.app" --web-Dir=. --no-telemetry
           npx cap add android --no-telemetry
           
+      - name: Sync web code
+        run: npx cap copy android --no-telemetry
+        
       - name: Build APK
         run: |
-          cd android && chmod +x gradlew
+          cd android
+          chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
           
       - uses: actions/upload-artifact@v4
         with:
-          name: trip-mate-apk
+          name: TripMate-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
