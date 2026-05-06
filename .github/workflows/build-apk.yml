@@ -1,0 +1,48 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-android-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - uses: android-actions/setup-android@v3
+        
+      - name: Install Capacitor
+        run: |
+          npm init -y
+          npm install @capacitor/core@latest
+          npm install @capacitor/cli@latest
+          npm install @capacitor/android@latest
+          
+      - name: Init Android project
+        run: |
+          npx cap init "旅行伴侣" "com.tripmate.app" --webDir=. --no-telemetry
+          npx cap add android --no-telemetry
+          
+      - name: Build APK
+        run: |
+          cd android && chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+          
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trip-mate-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
