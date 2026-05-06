@@ -29,13 +29,15 @@ jobs:
           npm install @capacitor/cli
           npm install @capacitor/android
           
-      - name: Add Android platform
+      - name: Init and Add Android
         run: |
-          npx cap init "旅行伴侣" "com.tripmate.app" --web-dir .
+          npx cap init "旅行伴侣" "com.tripmate.app" --web-dir ./ --force
           npx cap add android
           
-      - name: Sync web code
-        run: npx cap copy android
+      - name: Sync and Copy
+        run: |
+          npx cap sync android
+          npx cap copy android
         
       - name: Build APK
         run: |
